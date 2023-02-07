@@ -1,3 +1,5 @@
+import type { AddPostFormInputType } from './FormTypes';
+
 export type Post = {
   id: PostId;
   userId: number;
@@ -8,3 +10,7 @@ export type Post = {
 export type PostId = number;
 
 export type DeleteHandlerType = (id: PostId) => void;
+
+export type AddPostHandlerType = (
+  e: React.FormEvent<HTMLFormElement & AddPostFormInputType>,
+) => void;

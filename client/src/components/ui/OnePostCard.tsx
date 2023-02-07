@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
@@ -9,15 +10,18 @@ import {
   CardText,
   CardTitle,
 } from 'reactstrap';
-import type { Post, DeleteHandlerType } from '../types/PostType';
+import { useHandlersContext, usePostContext } from '../../contexts/PostContext';
+import type { Post, DeleteHandlerType } from '../../types/PostType';
 
 type OnePostCardProps = {
   post: Post;
-  deleteHandler: DeleteHandlerType;
+  // deleteHandler: DeleteHandlerType;
 };
 
-function OnePostCard({ post, deleteHandler }: OnePostCardProps): JSX.Element {
+function OnePostCard({ post }: OnePostCardProps): JSX.Element {
   console.log('render');
+  // window[`handler${post.id}`] = (): number => 5;
+  const { deleteHandler } = useHandlersContext();
   return (
     <Card
       className="my-2"
@@ -31,7 +35,7 @@ function OnePostCard({ post, deleteHandler }: OnePostCardProps): JSX.Element {
         <CardText>{post.body}</CardText>
         <ButtonGroup>
           <Button color="info" size="lg">
-            Show more
+            <Link to={`/posts/${post.id}`}>Show more</Link>
           </Button>
           <Button color="danger" size="lg" onClick={() => deleteHandler(post.id)}>
             Delete

@@ -1,12 +1,14 @@
 import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
-import type { AddPostFormInputType } from '../types/FormTypes';
+import { useHandlersContext, usePostContext } from '../../contexts/PostContext';
+import type { AddPostFormInputType } from '../../types/FormTypes';
 
-type AddPostFormProps = {
-  addPostHandler: (e: React.FormEvent<HTMLFormElement & AddPostFormInputType>) => void;
-};
+// type AddPostFormProps = {
+//   addPostHandler: (e: React.FormEvent<HTMLFormElement & AddPostFormInputType>) => void;
+// };
 
-export default function AddPostForm({ addPostHandler }: AddPostFormProps): JSX.Element {
+export default function AddPostForm(): JSX.Element {
+  const { addPostHandler } = useHandlersContext();
   return (
     <Form onSubmit={addPostHandler}>
       <FormGroup floating>

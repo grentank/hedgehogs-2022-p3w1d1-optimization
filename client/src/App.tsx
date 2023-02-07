@@ -1,53 +1,27 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { Container } from 'reactstrap';
-import AddPostForm from './components/AddPostForm';
-import ListAllPosts from './components/ListAllPosts';
+import AllPostsPage from './components/pages/AllPostsPage';
+import MainPage from './components/pages/MainPage';
+import OnePostPage from './components/pages/OnePostPage';
+import AddPostForm from './components/ui/AddPostForm';
+import ListAllPosts from './components/ui/ListAllPosts';
+import MyNavBar from './components/ui/NavBar';
+import PostContextProvider, { PostContext } from './contexts/PostContext';
 import type { AddPostFormInputType } from './types/FormTypes';
 import type { Post, PostId } from './types/PostType';
 
 function App(): JSX.Element {
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  useEffect(() => {
-    axios<Post[]>('/api/posts')
-      .then((res) => res.status === 200 && setPosts(res.data))
-      .catch(console.log);
-  }, []);
-
-  const addPostHandler = (e: React.FormEvent<HTMLFormElement & AddPostFormInputType>): void => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    if (!(form instanceof HTMLFormElement)) return;
-    const { postTitle, body } = form;
-    const reqbody = { title: postTitle.value, body: body.value };
-    // const formData = Object.fromEntries(new FormData(e.currentTarget)) as AddPostFormValuesType;
-
-    axios
-      .post<Post>('/api/posts', reqbody)
-      .then((res) => {
-        setPosts((prev) => [res.data, ...prev]);
-        form.reset();
-      })
-      .catch(console.log);
-  };
-
-  const deleteHandler = useCallback((id: PostId): void => {
-    axios
-      .delete(`/api/posts/${id}`)
-      .then(() => setPosts((prev) => prev.filter((post) => post.id !== id)))
-      .catch(console.log);
-  }, []);
-
-  const totalString = useMemo(() => posts.reduce((acc, cur) => acc + cur.title, ''), []);
-
-  console.log(totalString.length);
-
   return (
-    <Container>
-      <AddPostForm addPostHandler={addPostHandler} />
-      <ListAllPosts posts={posts} deleteHandler={deleteHandler} />
-    </Container>
+      <Container>
+        <MyNavBar />
+        <Routes>
+          <Route path='/' element={<MainPage />} />
+          <Route path='/posts' element={<AllPostsPage />} />
+          <Route path='/posts/:id' element={<OnePostPage />} />
+        </Routes>
+      </Container>
   );
 }
 
